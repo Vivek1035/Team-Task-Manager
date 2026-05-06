@@ -6,6 +6,7 @@ import com.taskmanager.dto.response.AuthResponse;
 import com.taskmanager.dto.response.UserResponse;
 import com.taskmanager.entity.User;
 import com.taskmanager.enums.Role;
+import com.taskmanager.enums.AuthProvider;
 import com.taskmanager.exception.AppException;
 import com.taskmanager.repository.UserRepository;
 import com.taskmanager.security.JwtUtil;
@@ -27,21 +28,21 @@ public class AuthService {
         }
 
         User user = userRepository.save(User.builder()
-            .name(req.name())
-            .email(req.email())
-            .password(passwordEncoder.encode(req.password()))
-            .role(Role.MEMBER)   // default role for self-registered users
-            .provider("LOCAL")
-            .build());
+                .name(req.name())
+                .email(req.email())
+                .password(passwordEncoder.encode(req.password()))
+                .role(Role.MEMBER) // default role for self-registered users
+                .provider(AuthProvider.LOCAL)
+                .build());
 
         return new AuthResponse(jwtUtil.generateToken(user), UserResponse.from(user));
     }
 
     public AuthResponse login(LoginRequest req) {
         User user = userRepository.findByEmail(req.email())
-            .orElseThrow(() -> AppException.unauthorized("Invalid email or password"));
+                .orElseThrow(() -> AppException.unauthorized("Invalid email or password"));
 
-        if (!"LOCAL".equals(user.getProvider())) {
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw AppException.badRequest("This account uses Google login. Please sign in with Google.");
         }
 

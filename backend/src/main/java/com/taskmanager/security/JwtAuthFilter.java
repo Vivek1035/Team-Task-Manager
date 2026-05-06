@@ -29,12 +29,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/oauth2/") || path.startsWith("/login/oauth2/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (path.startsWith("/auth/login") || path.startsWith("/auth/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -61,8 +78,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             // swallow exception → request continues unauthenticated
+            System.out.println("JWT ERROR: " + e.getMessage());
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }

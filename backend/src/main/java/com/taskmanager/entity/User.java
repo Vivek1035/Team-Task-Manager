@@ -1,6 +1,7 @@
 package com.taskmanager.entity;
 
 import com.taskmanager.enums.Role;
+import com.taskmanager.enums.AuthProvider;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,8 +36,9 @@ public class User {
      * Prevents someone from logging in via email/password with a Google-linked
      * account.
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String provider;
+    private AuthProvider provider;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

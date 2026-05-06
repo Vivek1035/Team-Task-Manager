@@ -14,7 +14,12 @@ export default function OAuthCallback() {
   const navigate   = useNavigate();
 
   useEffect(() => {
-    const token = params.get("token");
+    let token = params.get("token");
+    if (!token && window.location.hash) {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      token = hashParams.get("token");
+    }
+
     if (!token) {
       navigate("/login");
       return;

@@ -1,0 +1,51 @@
+# IntelliJ / VS Code
+.idea/
+.vscode/
+*.iml
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+
+# Spring Boot DevTools
+.springBeans
+.restart/
+
+# Environment / Secrets
+application-dev.yml
+application-prod.yml
+
+# JWT / OAuth Secrets
+*.pem
+*.key
+*.p12
+*.jks
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# Generated Files
+out/
+bin/
+
+# Node (if frontend inside project)
+node_modules/
+dist/
+coverage/
+
+# Mac/Linux hidden
+*~

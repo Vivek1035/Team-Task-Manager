@@ -33,7 +33,7 @@ public class ProjectController {
             @Valid @RequestBody CreateProjectRequest req,
             @AuthenticationPrincipal CustomUserDetails principal) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(projectService.create(req, principal.getUser()));
+                .body(projectService.create(req, principal.getUser()));
     }
 
     @PatchMapping("/{id}")
@@ -67,7 +67,9 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    /** Returns the calling user's role in the given project ("ADMIN" or "MEMBER"). */
+    /**
+     * Returns the calling user's role in the given project ("ADMIN" or "MEMBER").
+     */
     @GetMapping("/{id}/my-role")
     public ResponseEntity<Map<String, String>> getMyRole(
             @PathVariable UUID id,
@@ -75,6 +77,6 @@ public class ProjectController {
         Project project = projectService.findProjectOrThrow(id);
         boolean isAdmin = memberRepository.existsByProjectAndUserAndRole(
                 project, principal.getUser(), Role.ADMIN);
-        return ResponseEntity.ok(Map.of("role", isAdmin ? "ADMIN" : "MEMBER"));
+        return ResponseEntity.ok(Map.of("role", isAdmin ? Role.ADMIN.name() : Role.MEMBER.name()));
     }
 }

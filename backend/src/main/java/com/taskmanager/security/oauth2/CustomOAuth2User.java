@@ -2,9 +2,11 @@ package com.taskmanager.security.oauth2;
 
 import com.taskmanager.entity.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,20 +17,20 @@ import java.util.Map;
  * through to the success handler so we can issue a JWT.
  */
 @Getter
+@RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
 
     private final User user;
     private final Map<String, Object> attributes;
 
-    public CustomOAuth2User(User user, Map<String, Object> attributes) {
-        this.user = user;
-        this.attributes = attributes;
-    }
+    // public CustomOAuth2User(User user, Map<String, Object> attributes) {
+    // this.user = user;
+    // this.attributes = attributes;
+    // }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = user.getRole() != null ? user.getRole().name() : "MEMBER";
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
     }
 
     @Override
